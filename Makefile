@@ -8,7 +8,7 @@ DETECT_LIBS?=true
 # llama.cpp versions
 GOLLAMA_REPO?=https://github.com/go-skynet/go-llama.cpp
 GOLLAMA_VERSION?=2b57a8ae43e4699d3dc5d1496a1ccd42922993be
-CPPLLAMA_VERSION?=4b0c638b9a68f577cb2066b638c9f622d91ee661
+CPPLLAMA_VERSION?=b4d92a59a20eea400d8dd30844a339b76210daa0
 
 # whisper.cpp version
 WHISPER_REPO?=https://github.com/ggerganov/whisper.cpp
@@ -302,14 +302,8 @@ sources/stablediffusion-ggml.cpp:
 	git checkout $(STABLEDIFFUSION_GGML_VERSION) && \
 	git submodule update --init --recursive --depth 1 --single-branch
 
-sources/stablediffusion-ggml.cpp/build/libstable-diffusion.a: sources/stablediffusion-ggml.cpp
-	cd sources/stablediffusion-ggml.cpp && \
-	mkdir -p build && \
-	cd build && \
-	cmake $(CMAKE_ARGS) .. && \
-	cmake --build . --config Release
-
-backend/go/image/stablediffusion-ggml/libsd.a: sources/stablediffusion-ggml.cpp/build/libstable-diffusion.a
+backend/go/image/stablediffusion-ggml/libsd.a: sources/stablediffusion-ggml.cpp
+	$(MAKE) -C backend/go/image/stablediffusion-ggml build/libstable-diffusion.a
 	$(MAKE) -C backend/go/image/stablediffusion-ggml libsd.a
 
 backend-assets/grpc/stablediffusion-ggml: backend/go/image/stablediffusion-ggml/libsd.a backend-assets/grpc
