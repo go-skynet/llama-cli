@@ -401,6 +401,23 @@
     - filename: Negative-Anubis-70B-v1-Q4_K_M.gguf
       sha256: ac088da9ca70fffaa70c876fbada9fc5a02e7d6049ef68f16b11a9c3256f2510
       uri: huggingface://bartowski/Negative-Anubis-70B-v1-GGUF/Negative-Anubis-70B-v1-Q4_K_M.gguf
+- !!merge <<: *llama33
+  name: "l3.3-ms-nevoria-70b"
+  icon: https://cdn-uploads.huggingface.co/production/uploads/64545af5ec40bbbd01242ca6/dtlCF4LbekmDD2y3LNpdH.jpeg
+  urls:
+    - https://huggingface.co/Steelskull/L3.3-MS-Nevoria-70b
+    - https://huggingface.co/bartowski/L3.3-MS-Nevoria-70b-GGUF
+  description: |
+    This model was created as I liked the storytelling of EVA, the prose and details of scenes from EURYALE and Anubis, enhanced with Negative_LLAMA to kill off the positive bias with a touch of nemotron sprinkeled in.
+
+    The choice to use the lorablated model as a base was intentional - while it might seem counterintuitive, this approach creates unique interactions between the weights, similar to what was achieved in the original Astoria model and Astoria V2 model . Rather than simply removing refusals, this "weight twisting" effect that occurs when subtracting the lorablated base model from the other models during the merge process creates an interesting balance in the final model's behavior. While this approach differs from traditional sequential application of components, it was chosen for its unique characteristics in the model's responses.
+  overrides:
+    parameters:
+      model: L3.3-MS-Nevoria-70b-Q4_K_M.gguf
+  files:
+    - filename: L3.3-MS-Nevoria-70b-Q4_K_M.gguf
+      sha256: e8b0763f263089a19d4b112b7ed5085cc5f1ed9ca49c5085baa8d51f4ded1f94
+      uri: huggingface://bartowski/L3.3-MS-Nevoria-70b-GGUF/L3.3-MS-Nevoria-70b-Q4_K_M.gguf
 - &rwkv
   url: "github:mudler/LocalAI/gallery/rwkv.yaml@master"
   name: "rwkv-6-world-7b"
@@ -3138,6 +3155,52 @@
     - filename: steiner-32b-preview-Q4_K_M.gguf
       sha256: 1d7bf6d6dc8db8c81b3e71dc89756cd23417bb0a645b7dcdd1f9457781a88652
       uri: huggingface://bartowski/steiner-32b-preview-GGUF/steiner-32b-preview-Q4_K_M.gguf
+- !!merge <<: *qwen25
+  name: "qwerus-7b"
+  urls:
+    - https://huggingface.co/mlabonne/Qwerus-7B
+    - https://huggingface.co/bartowski/Qwerus-7B-GGUF
+  description: |
+    Qwerus-7B is a merge of the following models using LazyMergekit:
+    PRIME-RL/Eurus-2-7B-PRIME
+    Qwen/Qwen2.5-7B-Instruct
+  overrides:
+    parameters:
+      model: Qwerus-7B-Q4_K_M.gguf
+  files:
+    - filename: Qwerus-7B-Q4_K_M.gguf
+      sha256: 3676629e8092a59f523393e6eb5072727f5213a9e03b7b81141f05a33743e20c
+      uri: huggingface://bartowski/Qwerus-7B-GGUF/Qwerus-7B-Q4_K_M.gguf
+- !!merge <<: *qwen25
+  name: "lb-reranker-0.5b-v1.0"
+  urls:
+    - https://huggingface.co/lightblue/lb-reranker-0.5B-v1.0
+    - https://huggingface.co/bartowski/lb-reranker-0.5B-v1.0-GGUF
+  description: |
+    The LB Reranker has been trained to determine the relatedness of a given query to a piece of text, therefore allowing it to be used as a ranker or reranker in various retrieval-based tasks.
+
+    This model is fine-tuned from a Qwen/Qwen2.5-0.5B-Instruct model checkpoint and was trained for roughly 5.5 hours using the 8 x L20 instance (ecs.gn8is-8x.32xlarge) on Alibaba Cloud.
+
+    The training data for this model can be found at lightblue/reranker_continuous_filt_max7_train and the code for generating this data as well as running the training of the model can be found on our Github repo.
+
+    Trained on data in over 95 languages, this model is applicable to a broad range of use cases.
+
+    This model has three main benefits over comparable rerankers.
+
+        It has shown slightly higher performance on evaluation benchmarks.
+        It has been trained on more languages than any previous model.
+        It is a simple Causal LM model trained to output a string between "1" and "7".
+
+    This last point means that this model can be used natively with many widely available inference packages, including vLLM and LMDeploy. This in turns allows our reranker to benefit from improvements to inference as and when these packages release them.
+
+    Update: We have also found that this model works pretty well as a code snippet reranker too (P@1 of 96%)! See our Colab for more details.
+  overrides:
+    parameters:
+      model: lb-reranker-0.5B-v1.0-Q4_K_M.gguf
+  files:
+    - filename: lb-reranker-0.5B-v1.0-Q4_K_M.gguf
+      sha256: 43568150de5136da15c996bbf4d1a78cc6580515c40f0ef9a8c90b0542228ab3
+      uri: huggingface://bartowski/lb-reranker-0.5B-v1.0-GGUF/lb-reranker-0.5B-v1.0-Q4_K_M.gguf
 - &smollm
   ## SmolLM
   url: "github:mudler/LocalAI/gallery/chatml.yaml@master"
