@@ -1,5 +1,7 @@
 grpcio==1.69.0
 protobuf
-certifi
+phonemizer
+scipy
+munch
 setuptools
-scipy==1.14.0
+soundfile

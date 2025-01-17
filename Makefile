@@ -8,7 +8,7 @@ DETECT_LIBS?=true
 # llama.cpp versions
 GOLLAMA_REPO?=https://github.com/go-skynet/go-llama.cpp
 GOLLAMA_VERSION?=2b57a8ae43e4699d3dc5d1496a1ccd42922993be
-CPPLLAMA_VERSION?=b4d92a59a20eea400d8dd30844a339b76210daa0
+CPPLLAMA_VERSION?=4dbc8b9cb71876e005724f4e8f73a3544646bcf5
 
 # whisper.cpp version
 WHISPER_REPO?=https://github.com/ggerganov/whisper.cpp
@@ -583,10 +583,10 @@ protogen-go-clean:
 	$(RM) bin/*
 
 .PHONY: protogen-python
-protogen-python: autogptq-protogen bark-protogen coqui-protogen diffusers-protogen exllama2-protogen mamba-protogen rerankers-protogen sentencetransformers-protogen transformers-protogen parler-tts-protogen transformers-musicgen-protogen vall-e-x-protogen vllm-protogen openvoice-protogen
+protogen-python: autogptq-protogen bark-protogen coqui-protogen diffusers-protogen exllama2-protogen mamba-protogen rerankers-protogen sentencetransformers-protogen transformers-protogen parler-tts-protogen kokoro-protogen vllm-protogen openvoice-protogen
 
 .PHONY: protogen-python-clean
-protogen-python-clean: autogptq-protogen-clean bark-protogen-clean coqui-protogen-clean diffusers-protogen-clean  exllama2-protogen-clean mamba-protogen-clean sentencetransformers-protogen-clean rerankers-protogen-clean transformers-protogen-clean transformers-musicgen-protogen-clean parler-tts-protogen-clean vall-e-x-protogen-clean vllm-protogen-clean openvoice-protogen-clean
+protogen-python-clean: autogptq-protogen-clean bark-protogen-clean coqui-protogen-clean diffusers-protogen-clean  exllama2-protogen-clean mamba-protogen-clean sentencetransformers-protogen-clean rerankers-protogen-clean transformers-protogen-clean parler-tts-protogen-clean kokoro-protogen-clean vllm-protogen-clean openvoice-protogen-clean
 
 .PHONY: autogptq-protogen
 autogptq-protogen:
@@ -668,21 +668,13 @@ parler-tts-protogen:
 parler-tts-protogen-clean:
 	$(MAKE) -C backend/python/parler-tts protogen-clean
 
-.PHONY: transformers-musicgen-protogen
-transformers-musicgen-protogen:
-	$(MAKE) -C backend/python/transformers-musicgen protogen
+.PHONY: kokoro-protogen
+kokoro-protogen:
+	$(MAKE) -C backend/python/kokoro protogen
 
-.PHONY: transformers-musicgen-protogen-clean
-transformers-musicgen-protogen-clean:
-	$(MAKE) -C backend/python/transformers-musicgen protogen-clean
-
-.PHONY: vall-e-x-protogen
-vall-e-x-protogen:
-	$(MAKE) -C backend/python/vall-e-x protogen
-
-.PHONY: vall-e-x-protogen-clean
-vall-e-x-protogen-clean:
-	$(MAKE) -C backend/python/vall-e-x protogen-clean
+.PHONY: kokoro-protogen-clean
+kokoro-protogen-clean:
+	$(MAKE) -C backend/python/kokoro protogen-clean
 
 .PHONY: openvoice-protogen
 openvoice-protogen:
@@ -712,9 +704,8 @@ prepare-extra-conda-environments: protogen-python
 	$(MAKE) -C backend/python/sentencetransformers
 	$(MAKE) -C backend/python/rerankers
 	$(MAKE) -C backend/python/transformers
-	$(MAKE) -C backend/python/transformers-musicgen
 	$(MAKE) -C backend/python/parler-tts
-	$(MAKE) -C backend/python/vall-e-x
+	$(MAKE) -C backend/python/kokoro
 	$(MAKE) -C backend/python/openvoice
 	$(MAKE) -C backend/python/exllama2
 

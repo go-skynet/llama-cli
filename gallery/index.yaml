@@ -3201,6 +3201,41 @@
     - filename: lb-reranker-0.5B-v1.0-Q4_K_M.gguf
       sha256: 43568150de5136da15c996bbf4d1a78cc6580515c40f0ef9a8c90b0542228ab3
       uri: huggingface://bartowski/lb-reranker-0.5B-v1.0-GGUF/lb-reranker-0.5B-v1.0-Q4_K_M.gguf
+- !!merge <<: *qwen25
+  name: "uwu-7b-instruct"
+  urls:
+    - https://huggingface.co/qingy2024/UwU-7B-Instruct
+    - https://huggingface.co/bartowski/UwU-7B-Instruct-GGUF
+  description: |
+    Small QwQ, full-finetuned on FineQwQ-142K. Unlike my previous models, this one is a general-purpose reasoning machine!
+  overrides:
+    parameters:
+      model: UwU-7B-Instruct-Q4_K_M.gguf
+  files:
+    - filename: UwU-7B-Instruct-Q4_K_M.gguf
+      sha256: 279b2ba20d51bb155c8dd497cf49e0c28407b1822c75de88cfd83d13fd14a59f
+      uri: huggingface://bartowski/UwU-7B-Instruct-GGUF/UwU-7B-Instruct-Q4_K_M.gguf
+- !!merge <<: *qwen25
+  name: "drt-o1-14b"
+  urls:
+    - https://huggingface.co/Krystalan/DRT-o1-14B
+    - https://huggingface.co/bartowski/DRT-o1-14B-GGUF
+  description: |
+    This repository contains the resources for our paper "DRT-o1: Optimized Deep Reasoning Translation via Long Chain-of-Thought"
+    In this work, we introduce DRT-o1, an attempt to bring the success of long thought reasoning to neural machine translation (MT). To this end,
+
+    🌟 We mine English sentences with similes or metaphors from existing literature books, which are suitable for translation via long thought.
+    🌟 We propose a designed multi-agent framework with three agents (i.e., a translator, an advisor and an evaluator) to synthesize the MT samples with long thought. There are 22,264 synthesized samples in total.
+    🌟 We train DRT-o1-8B, DRT-o1-7B and DRT-o1-14B using Llama-3.1-8B-Instruct, Qwen2.5-7B-Instruct and Qwen2.5-14B-Instruct as backbones.
+
+    Our goal is not to achieve competitive performance with OpenAI’s O1 in neural machine translation (MT). Instead, we explore technical routes to bring the success of long thought to MT. To this end, we introduce DRT-o1, a byproduct of our exploration, and we hope it could facilitate the corresponding research in this direction.
+  overrides:
+    parameters:
+      model: DRT-o1-14B-Q4_K_M.gguf
+  files:
+    - filename: DRT-o1-14B-Q4_K_M.gguf
+      sha256: 9619ca984cf4ce8e4f69bcde831de17b2ce05dd89536e3130608877521e3d328
+      uri: huggingface://bartowski/DRT-o1-14B-GGUF/DRT-o1-14B-Q4_K_M.gguf
 - &smollm
   ## SmolLM
   url: "github:mudler/LocalAI/gallery/chatml.yaml@master"
@@ -3246,6 +3281,20 @@
     - filename: smollm2-1.7b-instruct-q4_k_m.gguf
       sha256: decd2598bc2c8ed08c19adc3c8fdd461ee19ed5708679d1c54ef54a5a30d4f33
       uri: huggingface://HuggingFaceTB/SmolLM2-1.7B-Instruct-GGUF/smollm2-1.7b-instruct-q4_k_m.gguf
+- !!merge <<: *qwen25
+  name: "vikhr-qwen-2.5-1.5b-instruct"
+  urls:
+    - https://huggingface.co/Vikhrmodels/Vikhr-Qwen-2.5-1.5B-Instruct
+    - https://huggingface.co/QuantFactory/Vikhr-Qwen-2.5-1.5B-Instruct-GGUF
+  description: |
+    Instructive model based on Qwen-2.5-1.5B-Instruct, trained on the Russian-language dataset GrandMaster-PRO-MAX. Designed for high-efficiency text processing in Russian and English, delivering precise responses and fast task execution.
+  overrides:
+    parameters:
+      model: Vikhr-Qwen-2.5-1.5B-Instruct.Q4_K_M.gguf
+  files:
+    - filename: Vikhr-Qwen-2.5-1.5B-Instruct.Q4_K_M.gguf
+      sha256: eaeac314e30b461413bc1cc819cdc0cd6a79265711fd0b8268702960a082c7bd
+      uri: huggingface://QuantFactory/Vikhr-Qwen-2.5-1.5B-Instruct-GGUF/Vikhr-Qwen-2.5-1.5B-Instruct.Q4_K_M.gguf
 - &llama31
   ## LLama3.1
   url: "github:mudler/LocalAI/gallery/llama3.1-instruct.yaml@master"
