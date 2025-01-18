@@ -119,7 +119,7 @@ func CompletionEndpoint(cl *config.BackendConfigLoader, ml *model.ModelLoader, e
 
 			responses := make(chan schema.OpenAIResponse)
 
-			go process(predInput, input, config, ml, responses, extraUsage)
+			go process(id, predInput, input, config, ml, responses, extraUsage)
 
 			c.Context().SetBodyStreamWriter(fasthttp.StreamWriter(func(w *bufio.Writer) {
 
