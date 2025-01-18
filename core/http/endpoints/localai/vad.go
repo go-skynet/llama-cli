@@ -18,7 +18,6 @@ import (
 // @Router		/vad [post]
 func VADEndpoint(cl *config.BackendConfigLoader, ml *model.ModelLoader, appConfig *config.ApplicationConfig) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-
 		input, ok := c.Locals(middleware.CONTEXT_LOCALS_KEY_LOCALAI_REQUEST).(*schema.VADRequest)
 		if !ok || input.Model == "" {
 			return fiber.ErrBadRequest

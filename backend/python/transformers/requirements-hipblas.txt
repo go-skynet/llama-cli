@@ -2,4 +2,8 @@
 torch==2.4.1+rocm6.0
 accelerate
 transformers
+llvmlite==0.43.0
 bitsandbytes
+outetts
+bitsandbytes
+sentence-transformers==3.3.1

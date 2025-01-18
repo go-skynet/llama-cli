@@ -16,7 +16,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/mudler/LocalAI/core/schema"
 	"github.com/mudler/LocalAI/pkg/functions"
-	model "github.com/mudler/LocalAI/pkg/model"
+	"github.com/mudler/LocalAI/pkg/model"
 	"github.com/mudler/LocalAI/pkg/templates"
 	"github.com/rs/zerolog/log"
 	"github.com/valyala/fasthttp"
@@ -31,8 +31,17 @@ import (
 func CompletionEndpoint(cl *config.BackendConfigLoader, ml *model.ModelLoader, evaluator *templates.Evaluator, appConfig *config.ApplicationConfig) func(c *fiber.Ctx) error {
 	created := int(time.Now().Unix())
 
-	process := func(id string, s string, req *schema.OpenAIRequest, config *config.BackendConfig, loader *model.ModelLoader, responses chan schema.OpenAIResponse) {
-		ComputeChoices(req, s, config, appConfig, loader, func(s string, c *[]schema.Choice) {}, func(s string, usage backend.TokenUsage) bool {
+	process := func(id string, s string, req *schema.OpenAIRequest, config *config.BackendConfig, loader *model.ModelLoader, responses chan schema.OpenAIResponse, extraUsage bool) {
+		ComputeChoices(req, s, config, appConfig, loader, func(s string, c *[]schema.Choice) {}, func(s string, tokenUsage backend.TokenUsage) bool {
+			usage := schema.OpenAIUsage{
+				PromptTokens:     tokenUsage.Prompt,
+				CompletionTokens: tokenUsage.Completion,
+				TotalTokens:      tokenUsage.Prompt + tokenUsage.Completion,
+			}
+			if extraUsage {
+				usage.TimingTokenGeneration = tokenUsage.TimingTokenGeneration
+				usage.TimingPromptProcessing = tokenUsage.TimingPromptProcessing
+			}
 			resp := schema.OpenAIResponse{
 				ID:      id,
 				Created: created,
@@ -44,11 +53,7 @@ func CompletionEndpoint(cl *config.BackendConfigLoader, ml *model.ModelLoader, e
 					},
 				},
 				Object: "text_completion",
-				Usage: schema.OpenAIUsage{
-					PromptTokens:     usage.Prompt,
-					CompletionTokens: usage.Completion,
-					TotalTokens:      usage.Prompt + usage.Completion,
-				},
+				Usage:  usage,
 			}
 			log.Debug().Msgf("Sending goroutine: %s", s)
 
@@ -61,6 +66,7 @@ func CompletionEndpoint(cl *config.BackendConfigLoader, ml *model.ModelLoader, e
 	return func(c *fiber.Ctx) error {
 		// Handle Correlation
 		id := c.Get("X-Correlation-ID", uuid.New().String())
+		extraUsage := c.Get("Extra-Usage", "") != ""
 
 		input, ok := c.Locals(middleware.CONTEXT_LOCALS_KEY_LOCALAI_REQUEST).(*schema.OpenAIRequest)
 		if !ok || input.Model == "" {
@@ -113,7 +119,7 @@ func CompletionEndpoint(cl *config.BackendConfigLoader, ml *model.ModelLoader, e
 
 			responses := make(chan schema.OpenAIResponse)
 
-			go process(id, predInput, input, config, ml, responses)
+			go process(predInput, input, config, ml, responses, extraUsage)
 
 			c.Context().SetBodyStreamWriter(fasthttp.StreamWriter(func(w *bufio.Writer) {
 
@@ -170,10 +176,19 @@ func CompletionEndpoint(cl *config.BackendConfigLoader, ml *model.ModelLoader, e
 				return err
 			}
 
-			totalTokenUsage.Prompt += tokenUsage.Prompt
-			totalTokenUsage.Completion += tokenUsage.Completion
+			totalTokenUsage.TimingTokenGeneration += tokenUsage.TimingTokenGeneration
+			totalTokenUsage.TimingPromptProcessing += tokenUsage.TimingPromptProcessing
 
 			result = append(result, r...)
+		}
+		usage := schema.OpenAIUsage{
+			PromptTokens:     totalTokenUsage.Prompt,
+			CompletionTokens: totalTokenUsage.Completion,
+			TotalTokens:      totalTokenUsage.Prompt + totalTokenUsage.Completion,
+		}
+		if extraUsage {
+			usage.TimingTokenGeneration = totalTokenUsage.TimingTokenGeneration
+			usage.TimingPromptProcessing = totalTokenUsage.TimingPromptProcessing
 		}
 
 		resp := &schema.OpenAIResponse{
@@ -182,11 +197,7 @@ func CompletionEndpoint(cl *config.BackendConfigLoader, ml *model.ModelLoader, e
 			Model:   input.Model, // we have to return what the user sent here, due to OpenAI spec.
 			Choices: result,
 			Object:  "text_completion",
-			Usage: schema.OpenAIUsage{
-				PromptTokens:     totalTokenUsage.Prompt,
-				CompletionTokens: totalTokenUsage.Completion,
-				TotalTokens:      totalTokenUsage.Prompt + totalTokenUsage.Completion,
-			},
+			Usage:   usage,
 		}
 
 		jsonResult, _ := json.Marshal(resp)
