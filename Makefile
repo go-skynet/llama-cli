@@ -24,7 +24,7 @@ STABLEDIFFUSION_VERSION?=4a3cd6aeae6f66ee57eae9a0075f8c58c3a6a38f
 
 # bark.cpp
 BARKCPP_REPO?=https://github.com/PABannier/bark.cpp.git
-BARKCPP_VERSION?=v1.0.0
+BARKCPP_VERSION?=5d5be84f089ab9ea53b7a793f088d3fbf7247495
 
 # stablediffusion.cpp (ggml)
 STABLEDIFFUSION_GGML_REPO?=https://github.com/leejet/stable-diffusion.cpp
